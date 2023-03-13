@@ -36,7 +36,7 @@ export const NavBar = ({ drawerWidth = 240 }) => {
           container
           direction="row"
           justifyContent="space-between"
-          alignItem="center"
+          alignItems="center"
         >
           <Typography variant="h6" noWrap component="div">
             {" "}
