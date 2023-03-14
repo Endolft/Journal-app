@@ -72,7 +72,7 @@ export const startLogOut = () => {
 export const startLoandingNote = () => {
   return async (dispatch, getState) => {
     const { uid } = getState().auth;
-
+   
     if (!uid) {
       throw new Error(" el uid no existe");
     }

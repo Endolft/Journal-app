@@ -1,4 +1,4 @@
-import { doc, setDoc, collection,deleteDoc} from "firebase/firestore/lite";
+import { doc, setDoc, collection, deleteDoc } from "firebase/firestore/lite";
 import { FirebaseDB } from "../../firebase/config";
 import { fileUpload } from "../../helpers";
 import {
@@ -20,12 +20,10 @@ export const startNewNote = () => {
       title: "",
       body: "",
       date: new Date().getTime(),
-      imageUrls:[]
+      imageUrls: [],
     };
 
     const newDoc = await doc(collection(FirebaseDB, `${uid}/journal/notes`));
-
-    await setDoc(newDoc, newNote);
 
     newNote.id = newDoc.id;
 
@@ -44,10 +42,11 @@ export const startSaveNote = () => {
 
     delete noteToFireStore.id;
 
-    const docRef = doc(FirebaseDB, `${uid}/journal/notes/${noteActive.id}`);
+    if (noteActive.title !== "" || noteActive.body !== "") {
+      const docRef = doc(FirebaseDB, `${uid}/journal/notes/${noteActive.id}`);
 
-    await setDoc(docRef, noteToFireStore, { merge: true });
-
+      await setDoc(docRef, noteToFireStore, { merge: true });
+    }
     dispatch(updateNote(noteActive));
   };
 };
@@ -75,11 +74,10 @@ export const startDeleteNote = () => {
     const { uid } = getState().auth;
     const { active: noteActive } = getState().journal;
 
-    const docRef= doc(FirebaseDB,`${uid}/journal/notes/${noteActive.id}`);
+    const docRef = doc(FirebaseDB, `${uid}/journal/notes/${noteActive.id}`);
 
-     await deleteDoc(docRef)
+    await deleteDoc(docRef);
 
-    
-    dispatch(deleteNoteById(noteActive.id))
+    dispatch(deleteNoteById(noteActive.id));
   };
 };

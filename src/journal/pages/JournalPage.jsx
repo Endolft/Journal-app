@@ -8,23 +8,25 @@ import { useMemo } from "react";
 
 export const JournalPage = () => {
   const dispatch = useDispatch();
-  const { isSaving, active: noteActive } = useSelector(
-    (state) => state.journal
-  );
-  const itSavingNote = useMemo(() => isSaving === false, [isSaving]);
+  const {
+    isSaving,
+    active: noteActive,
+    isEditing,
+  } = useSelector((state) => state.journal);
+  const itEditingNote = useMemo(() => isEditing === true, [isEditing]);
 
   const addNote = () => {
     dispatch(startNewNote());
   };
   return (
     <JournalLayout>
-      {(!!noteActive )? (
+      {!!noteActive ? (
         <NoteViews />
       ) : (
         <NothingSelectedView className="animate__animated animate__fadeIn animate__slow" />
       )}
       <IconButton
-        disabled={!itSavingNote}
+        disabled={itEditingNote}
         size="large"
         sx={{
           color: "white",

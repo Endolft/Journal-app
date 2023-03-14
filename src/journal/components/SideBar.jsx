@@ -30,15 +30,15 @@ export const SideBar = (props) => {
   };
 
   const drawer = (
-    <div>
+    <>
       <Divider />
-      <Toolbar />
+
       <List>
         {notes.map((note) => {
           return <SideBarItem key={note.id} {...note} />;
         })}
       </List>
-    </div>
+    </>
   );
 
   const container =
@@ -64,9 +64,7 @@ export const SideBar = (props) => {
           >
             <MenuIcon />
           </IconButton>
-          <Typography variant="h6" noWrap component="div">
-            Journal App
-          </Typography>
+          
         </Toolbar>
       </AppBar>
       <Box

@@ -7,6 +7,7 @@ import { Grid } from "@mui/material";
 import { useDispatch } from "react-redux";
 import { logout } from "../../store/auth/authSlices";
 import { startLogOut } from "../../store/auth/thunks";
+import MenuIcon from "@mui/icons-material/Menu";
 
 export const NavBar = ({ drawerWidth = 240 }) => {
   const dispatch = useDispatch();
@@ -16,37 +17,40 @@ export const NavBar = ({ drawerWidth = 240 }) => {
     console.log("aprentando");
   };
   return (
-    <AppBar
-      position="fixed"
-      sx={{
-        width: { sm: `calc( 100% - ${drawerWidth}px)` },
-        ml: { sm: `${drawerWidth}px` },
-      }}
-    >
-      <Toolbar>
-        <Typography variant="h6"></Typography>
-        <IconButton
-          aria-label=""
-          color="inherit"
-          sx={{ mr: 2, display: { sm: "none" } }}
-        >
-          <MenuOutlined />
-        </IconButton>
-        <Grid
-          container
-          direction="row"
-          justifyContent="space-between"
-          alignItems="center"
-        >
-          <Typography variant="h6" noWrap component="div">
-            {" "}
-            Journal App
-          </Typography>
-          <IconButton color="error" onClick={onLogOut}>
-            <LogoutOutlined />
+    <>
+      
+      <AppBar
+        position="fixed"
+        sx={{
+          width: { sm: `calc( 100% - ${drawerWidth}px)` },
+          ml: { sm: `${drawerWidth}px` },
+        }}
+      >
+        <Toolbar>
+          <Typography variant="h6"></Typography>
+          <IconButton
+            aria-label=""
+            color="inherit"
+            sx={{ mr: 2, display: { sm: "none" } }}
+          >
+            <MenuOutlined />
           </IconButton>
-        </Grid>
-      </Toolbar>
-    </AppBar>
+          <Grid
+            container
+            direction="row"
+            justifyContent="space-between"
+            alignItems="center"
+          >
+            <Typography variant="h6" noWrap component="div">
+              {" "}
+              Journal App
+            </Typography>
+            <IconButton color="error" onClick={onLogOut}>
+              <LogoutOutlined />
+            </IconButton>
+          </Grid>
+        </Toolbar>
+      </AppBar>
+    </>
   );
 };
