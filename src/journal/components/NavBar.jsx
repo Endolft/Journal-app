@@ -9,12 +9,12 @@ import { logout } from "../../store/auth/authSlices";
 import { startLogOut } from "../../store/auth/thunks";
 import MenuIcon from "@mui/icons-material/Menu";
 
-export const NavBar = ({ drawerWidth = 240 }) => {
+export const NavBar = ({ drawerWidth = 240 ,handleDrawerToggle}) => {
   const dispatch = useDispatch();
 
   const onLogOut = (event) => {
     dispatch(startLogOut());
-    console.log("aprentando");
+   
   };
   return (
     <>
@@ -27,14 +27,18 @@ export const NavBar = ({ drawerWidth = 240 }) => {
         }}
       >
         <Toolbar>
-          <Typography variant="h6"></Typography>
-          <IconButton
-            aria-label=""
+
+        <IconButton
             color="inherit"
+            aria-label="open drawer"
+            edge="start"
+            onClick={handleDrawerToggle}
             sx={{ mr: 2, display: { sm: "none" } }}
           >
-            <MenuOutlined />
+            <MenuIcon />
           </IconButton>
+          <Typography variant="h6"></Typography>
+          
           <Grid
             container
             direction="row"

@@ -14,6 +14,7 @@ import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import { useSelector } from "react-redux";
 import { SideBarItem } from "./SideBarItem";
+import { NavBar } from "./NavBar";
 
 const drawerWidth = 240;
 
@@ -46,27 +47,13 @@ export const SideBar = (props) => {
 
   return (
     <Box sx={{ display: "flex" }}>
-      <CssBaseline />
-      <AppBar
-        position="fixed"
-        sx={{
-          width: { sm: `calc(100% - ${drawerWidth}px)` },
-          ml: { sm: `${drawerWidth}px` },
-        }}
-      >
-        <Toolbar>
-          <IconButton
-            color="inherit"
-            aria-label="open drawer"
-            edge="start"
-            onClick={handleDrawerToggle}
-            sx={{ mr: 2, display: { sm: "none" } }}
-          >
-            <MenuIcon />
-          </IconButton>
+      
+     
+        <>
+         <NavBar  handleDrawerToggle={handleDrawerToggle}/>
           
-        </Toolbar>
-      </AppBar>
+        </>
+      
       <Box
         component="nav"
         sx={{ width: { sm: drawerWidth }, flexShrink: { sm: 0 } }}
