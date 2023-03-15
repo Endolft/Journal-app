@@ -21,6 +21,7 @@ export const startNewNote = () => {
       body: "",
       date: new Date().getTime(),
       imageUrls: [],
+      temporalImages: [],
     };
 
     const newDoc = await doc(collection(FirebaseDB, `${uid}/journal/notes`));
@@ -32,15 +33,25 @@ export const startNewNote = () => {
   };
 };
 
-export const startSaveNote = () => {
+export const startSaveNote = (files = []) => {
   return async (dispatch, getState) => {
     dispatch(setSaving());
+    const fileUploadPromises = [];
+    for (const file of files) {
+      fileUploadPromises.push(fileUpload(file));
+    }
+    const photosUrls = await Promise.all(fileUploadPromises);
+
+    dispatch(setPhotoToActiveNote(photosUrls));
+
     const { uid } = getState().auth;
     const { active: noteActive } = getState().journal;
-
     const noteToFireStore = { ...noteActive };
 
+    
+
     delete noteToFireStore.id;
+    delete noteToFireStore.temporalImages;
 
     if (noteActive.title !== "" || noteActive.body !== "") {
       const docRef = doc(FirebaseDB, `${uid}/journal/notes/${noteActive.id}`);
@@ -55,17 +66,21 @@ export const startUploandingFile = (files = []) => {
   return async (dispatch) => {
     dispatch(setSaving());
 
-    /* await fileUpload(files[0]); */
+    const filesCodified = [];
 
-    const fileUploadPromises = [];
+    for (const file of files) {
+      filesCodified.push(URL.createObjectURL(file));
+    }
+
+    /*   const fileUploadPromises = [];
 
     for (const file of files) {
       fileUploadPromises.push(fileUpload(file));
-      console.log("me estoy disparando");
+    
     }
-    const photosUrls = await Promise.all(fileUploadPromises);
+    const photosUrls = await Promise.all(fileUploadPromises);  */
 
-    dispatch(setPhotoToActiveNote(photosUrls));
+    dispatch(setPhotoToActiveNote(filesCodified));
   };
 };
 

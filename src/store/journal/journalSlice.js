@@ -29,6 +29,7 @@ export const journalSlice = createSlice({
       state.notes = action.payload.filter(
         (note) => note.title !== "" || note.body !== ""
       );
+      state.notes.temporalImages = [];
     },
     setSaving: (state) => {
       state.isSaving = false;
@@ -49,7 +50,17 @@ export const journalSlice = createSlice({
       state.mesageSaved = `${action.payload.title}`;
     },
     setPhotoToActiveNote: (state, action) => {
+      if (`${action.payload[0]}`.includes(`blob:http`)) {
+        state.active.temporalImages = [
+          ...state.active.temporalImages,
+          ...action.payload,
+        ];
+
+        state.isSaving = false;
+        return;
+      }
       state.active.imageUrls = [...state.active.imageUrls, ...action.payload];
+      state.active.temporalImages = [];
       state.isSaving = false;
     },
     deleteNoteById: (state, action) => {
@@ -61,6 +72,7 @@ export const journalSlice = createSlice({
       state.mesageSaved = "";
       state.notes = [];
       state.active = null;
+      state.temporalImages = [];
     },
   },
 });

@@ -9,16 +9,14 @@ import { logout } from "../../store/auth/authSlices";
 import { startLogOut } from "../../store/auth/thunks";
 import MenuIcon from "@mui/icons-material/Menu";
 
-export const NavBar = ({ drawerWidth = 240 ,handleDrawerToggle}) => {
+export const NavBar = ({ drawerWidth = 240, handleDrawerToggle }) => {
   const dispatch = useDispatch();
 
   const onLogOut = (event) => {
     dispatch(startLogOut());
-   
   };
   return (
     <>
-      
       <AppBar
         position="fixed"
         sx={{
@@ -27,8 +25,7 @@ export const NavBar = ({ drawerWidth = 240 ,handleDrawerToggle}) => {
         }}
       >
         <Toolbar>
-
-        <IconButton
+          <IconButton
             color="inherit"
             aria-label="open drawer"
             edge="start"
@@ -38,7 +35,7 @@ export const NavBar = ({ drawerWidth = 240 ,handleDrawerToggle}) => {
             <MenuIcon />
           </IconButton>
           <Typography variant="h6"></Typography>
-          
+
           <Grid
             container
             direction="row"

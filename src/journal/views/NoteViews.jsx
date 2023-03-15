@@ -10,7 +10,7 @@ import { TextField, IconButton } from "@mui/material";
 import { ImageGallery } from "../components";
 import { useForm } from "../../hooks/useForm";
 import { useDispatch, useSelector } from "react-redux";
-import { useEffect, useMemo, useRef } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
   setActiveNote,
   startDeleteNote,
@@ -27,6 +27,8 @@ export const NoteViews = () => {
     isSaving,
   } = useSelector((state) => state.journal);
 
+  const [files, setfiles] = useState([]);
+
   const { body, title, date, onInputChange, formState } = useForm(noteActive);
 
   const dispatch = useDispatch();
@@ -40,11 +42,12 @@ export const NoteViews = () => {
   }, [date]);
 
   useEffect(() => {
+   
     dispatch(setActiveNote(formState));
   }, [formState]);
 
   const onSaveNote = () => {
-    dispatch(startSaveNote());
+    dispatch(startSaveNote(files));
   };
 
   useEffect(() => {
@@ -55,6 +58,9 @@ export const NoteViews = () => {
 
   const onFileInputChange = ({ target }) => {
     if (target.files === 0) return;
+
+    setfiles(target.files);
+
     dispatch(startUploandingFile(target.files));
   };
 
@@ -134,7 +140,7 @@ export const NoteViews = () => {
           Borrar
         </Button>
       </Grid>
-      <ImageGallery images={noteActive.imageUrls} />
+      <ImageGallery />
     </Grid>
   );
 };
