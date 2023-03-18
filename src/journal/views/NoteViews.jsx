@@ -38,7 +38,12 @@ export const NoteViews = () => {
   const dateString = useMemo(() => {
     const newDate = new Date(date);
 
-    return newDate.toUTCString();
+    return newDate.toLocaleString("es-AR",{
+      weekday: "long",
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    });
   }, [date]);
 
   useEffect(() => {
@@ -75,7 +80,7 @@ export const NoteViews = () => {
       container
       direction="row"
       justifyContent="space-between"
-      sx={{ mb: 1 }}
+      sx={{ mb: 1, }}
       alignItems="center"
     >
       <Grid item>

@@ -1,39 +1,75 @@
 import ImageList from "@mui/material/ImageList";
 import ImageListItem from "@mui/material/ImageListItem";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import Grid from "@mui/material/Grid";
+
+
+import { deleteImagebyUrl } from "../../store/journal/thunks";
 
 export const ImageGallery = () => {
   const { active } = useSelector((state) => state.journal);
+  const dispatch = useDispatch();
+  const { temporalImages = [], imageUrls = [] } = active;
 
-  const { temporalImages=[], imageUrls=[] } = active;
+  const deleteImage = (event) => {
+    const temporalImagesCut = temporalImages.filter((img) => img !== event);
+    const urlsImagesCut = imageUrls.filter((img) => img !== event);
 
-  return  temporalImages.length > 0 ? 
-      <ImageList sx={{ width: "100%", height: 500 }} cols={4} rowHeight={200}>
-        {temporalImages.map((image) => (
-          <ImageListItem key={image}>
-            <img
-              src={`${image}`}
-              srcSet={`${image}?w=164&h=164&fit=crop&auto=format&dpr=2 2x`}
-              alt={"imagen de la nota"}
-              loading="lazy"
-            />
-            <input type={"checkbox"} />
-          </ImageListItem>
-        ))}
-      </ImageList>
-     : 
-      <ImageList sx={{ width: "100%", height: 500 }} cols={4} rowHeight={200}>
-        {imageUrls.map((image) => (
-          <ImageListItem key={image}>
-            <img
-              src={`${image}?w=164&h=164&fit=crop&auto=format`}
-              srcSet={`${image}?w=164&h=164&fit=crop&auto=format&dpr=2 2x`}
-              alt={"imagen de la nota"}
-              loading="lazy"
-            />
-            <input type={"checkbox"} />
-          </ImageListItem>
-        ))}
-      </ImageList>
+    if (event.includes("blob:")) {
+      dispatch(deleteImagebyUrl(temporalImagesCut));
+      return;
+    }
+    dispatch(deleteImagebyUrl(urlsImagesCut));
+  };
 
+  const imageSx = {
+    display: "flex",
+    alignItems: "center",
+    opacity: 0,
+    height: "inherit",
+    backgroundColor: "#7e7d7d",
+    width: "100%",
+    justifyContent: "center",
+    "&:hover": {
+      border: "5px solid black",
+      opacity: 0.7,
+    },
+  };
+
+  return (
+    <ImageList
+      sx={{ height: "100%" /* backgroundColor: "green" */ }}
+      cols={4}
+      rowHeight={400}
+    >
+      {[...imageUrls, ...temporalImages].map((image) => (
+        <ImageListItem key={image}>
+          <img
+            src={`${image}`}
+            alt={"imagen de la nota"}
+            loading="lazy"
+            height="100%"
+          />
+
+          <Grid
+            container
+            sx={{
+              height: "inherit",
+              position: "absolute",
+              width: "100%",
+            }}
+            key={image}
+          >
+            <Grid item sx={imageSx}>
+              <img
+                src="https://www.seekpng.com/png/full/202-2022743_edit-delete-icon-png-download-delete-icon-png.png"
+                style={{ width: "20% ", height: "20%", cursor: "pointer" }}
+                onClick={() => deleteImage(image)}
+              ></img>
+            </Grid>
+          </Grid>
+        </ImageListItem>
+      ))}
+    </ImageList>
+  );
 };

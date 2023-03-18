@@ -4,6 +4,7 @@ import { fileUpload } from "../../helpers";
 import {
   addNewEmptyNote,
   deleteNoteById,
+  deletePhoto,
   savingNewNote,
   setActiveNote,
   setPhotoToActiveNote,
@@ -48,8 +49,6 @@ export const startSaveNote = (files = []) => {
     const { active: noteActive } = getState().journal;
     const noteToFireStore = { ...noteActive };
 
-    
-
     delete noteToFireStore.id;
     delete noteToFireStore.temporalImages;
 
@@ -59,6 +58,15 @@ export const startSaveNote = (files = []) => {
       await setDoc(docRef, noteToFireStore, { merge: true });
     }
     dispatch(updateNote(noteActive));
+  };
+};
+
+export const deleteImagebyUrl = (files=[]) => {
+  return async (dispatch, getState) => {
+
+   
+    dispatch(deletePhoto(files))
+
   };
 };
 
