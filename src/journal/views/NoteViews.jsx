@@ -1,24 +1,18 @@
-import Grid from "@mui/material/Grid";
-import Typography from "@mui/material/Typography";
-import Button from "@mui/material/Button";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { Typography, Grid, Button, TextField, IconButton } from "@mui/material";
+import Swal from "sweetalert2";
+import "sweetalert2/dist/sweetalert2.css";
 import {
   SaveOutlined,
   UploadOutlined,
   DeleteOutlined,
 } from "@mui/icons-material";
-import { TextField, IconButton } from "@mui/material";
 import { ImageGallery } from "../components";
+import { startUploandingFile } from "../../store/journal";
 import { useForm } from "../../hooks/useForm";
-import { useDispatch, useSelector } from "react-redux";
-import { useEffect, useMemo, useRef, useState } from "react";
-import {
-  setActiveNote,
-  startDeleteNote,
-  startSaveNote,
-  startUploandingFile,
-} from "../../store/journal";
-import Swal from "sweetalert2";
-import "sweetalert2/dist/sweetalert2.css";
+import { useDateString, useSelectNote } from "../hooks";
+import { handleNotes } from "../helpers/handleNotes";
 
 export const NoteViews = () => {
   const {
@@ -26,34 +20,16 @@ export const NoteViews = () => {
     mesageSaved,
     isSaving,
   } = useSelector((state) => state.journal);
+  const dispatch = useDispatch();
 
   const [files, setfiles] = useState([]);
 
   const { body, title, date, onInputChange, formState } = useForm(noteActive);
+  const dateString = useDateString(date);
+  useSelectNote({ formState, noteActive, setfiles });
 
-  const dispatch = useDispatch();
-
+  const { onDelete, onSaveNote } = handleNotes({ files });
   const isSavingNote = useMemo(() => isSaving === true, [isSaving]);
-
-  const dateString = useMemo(() => {
-    const newDate = new Date(date);
-
-    return newDate.toLocaleString("es-AR",{
-      weekday: "long",
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    });
-  }, [date]);
-
-  useEffect(() => {
-   
-    dispatch(setActiveNote(formState));
-  }, [formState]);
-
-  const onSaveNote = () => {
-    dispatch(startSaveNote(files));
-  };
 
   useEffect(() => {
     if (mesageSaved.length > 0) {
@@ -63,6 +39,7 @@ export const NoteViews = () => {
 
   const onFileInputChange = ({ target }) => {
     if (target.files === 0) return;
+    console.log(target.files);
 
     setfiles(target.files);
 
@@ -71,16 +48,12 @@ export const NoteViews = () => {
 
   const fileInputRef = useRef();
 
-  const onDelete = () => {
-    dispatch(startDeleteNote());
-  };
-
   return (
     <Grid
       container
       direction="row"
       justifyContent="space-between"
-      sx={{ mb: 1, }}
+      sx={{ mb: 1 }}
       alignItems="center"
     >
       <Grid item>

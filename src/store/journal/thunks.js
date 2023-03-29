@@ -1,15 +1,16 @@
-import { doc, setDoc, collection, deleteDoc } from "firebase/firestore/lite";
+import { doc, collection, deleteDoc } from "firebase/firestore/lite";
 import { FirebaseDB } from "../../firebase/config";
-import { fileUpload } from "../../helpers";
+
+import { saveImages, saveNote } from "../../services/";
+
 import {
   addNewEmptyNote,
   deleteNoteById,
-  deletePhoto,
+  deleteSavedPhoto,
   savingNewNote,
   setActiveNote,
   setPhotoToActiveNote,
   setSaving,
-  updateNote,
 } from "./journalSlice";
 
 export const startNewNote = () => {
@@ -34,39 +35,25 @@ export const startNewNote = () => {
   };
 };
 
-export const startSaveNote = (files = []) => {
+export const startSaveNote = ({ files = [] }) => {
   return async (dispatch, getState) => {
     dispatch(setSaving());
-    const fileUploadPromises = [];
-    for (const file of files) {
-      fileUploadPromises.push(fileUpload(file));
-    }
-    const photosUrls = await Promise.all(fileUploadPromises);
-
-    dispatch(setPhotoToActiveNote(photosUrls));
+    console.log(files);
+    await saveImages({ files, dispatch });
 
     const { uid } = getState().auth;
     const { active: noteActive } = getState().journal;
     const noteToFireStore = { ...noteActive };
 
-    delete noteToFireStore.id;
-    delete noteToFireStore.temporalImages;
-
-    if (noteActive.title !== "" || noteActive.body !== "") {
-      const docRef = doc(FirebaseDB, `${uid}/journal/notes/${noteActive.id}`);
-
-      await setDoc(docRef, noteToFireStore, { merge: true });
-    }
-    dispatch(updateNote(noteActive));
+    saveNote({ noteToFireStore, noteActive, uid, dispatch });
   };
 };
 
-export const deleteImagebyUrl = (files=[]) => {
+export const deleteImageSaved = (files = []) => {
   return async (dispatch, getState) => {
+    //estado para borrar de cloudnary
 
-   
-    dispatch(deletePhoto(files))
-
+    dispatch(deleteSavedPhoto(files));
   };
 };
 
@@ -74,19 +61,15 @@ export const startUploandingFile = (files = []) => {
   return async (dispatch) => {
     dispatch(setSaving());
 
+    const filesArray = Object.values(files);
+
     const filesCodified = [];
 
-    for (const file of files) {
-      filesCodified.push(URL.createObjectURL(file));
+    for (const file of filesArray) {
+      if (file.type.includes("image")) {
+        filesCodified.push(URL.createObjectURL(file));
+      }
     }
-
-    /*   const fileUploadPromises = [];
-
-    for (const file of files) {
-      fileUploadPromises.push(fileUpload(file));
-    
-    }
-    const photosUrls = await Promise.all(fileUploadPromises);  */
 
     dispatch(setPhotoToActiveNote(filesCodified));
   };

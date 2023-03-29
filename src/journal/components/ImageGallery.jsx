@@ -3,8 +3,8 @@ import ImageListItem from "@mui/material/ImageListItem";
 import { useDispatch, useSelector } from "react-redux";
 import Grid from "@mui/material/Grid";
 
-
-import { deleteImagebyUrl } from "../../store/journal/thunks";
+import { deleteImageSaved } from "../../store/journal/thunks";
+import { deleteTemporalPhoto } from "../../store/journal";
 
 export const ImageGallery = () => {
   const { active } = useSelector((state) => state.journal);
@@ -16,10 +16,10 @@ export const ImageGallery = () => {
     const urlsImagesCut = imageUrls.filter((img) => img !== event);
 
     if (event.includes("blob:")) {
-      dispatch(deleteImagebyUrl(temporalImagesCut));
+      dispatch(deleteTemporalPhoto(temporalImagesCut));
       return;
     }
-    dispatch(deleteImagebyUrl(urlsImagesCut));
+    dispatch(deleteImageSaved(urlsImagesCut));
   };
 
   const imageSx = {

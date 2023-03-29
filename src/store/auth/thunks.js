@@ -4,7 +4,7 @@ import {
   registerUserWithEmail,
   singInWithGoogle,
 } from "../../firebase/providers";
-import { loadNotes } from "../../helpers";
+import { loadNotes } from "../../services";
 import { clearNoteLogout, setNote } from "../journal";
 import { chekingCredentials, login, logout } from "./authSlices";
 
@@ -72,7 +72,7 @@ export const startLogOut = () => {
 export const startLoandingNote = () => {
   return async (dispatch, getState) => {
     const { uid } = getState().auth;
-   
+
     if (!uid) {
       throw new Error(" el uid no existe");
     }

@@ -37,7 +37,7 @@ export const LoginPage = () => {
     dispatch(starLoginWithEmailPassword({ email, password }));
   };
   const onGoogleSignIn = () => {
-    console.log("onGoogleSignIn");
+    
     dispatch(starGoogleSignIn());
   };
 

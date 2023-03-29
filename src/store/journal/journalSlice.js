@@ -50,33 +50,28 @@ export const journalSlice = createSlice({
       state.mesageSaved = `${action.payload.title}`;
     },
     setPhotoToActiveNote: (state, action) => {
-      if (`${action.payload[0]}`.includes(`blob:http`)) {
-        state.active.temporalImages = [
-          ...state.active.temporalImages,
-          ...action.payload,
-        ];
+      state.active.temporalImages = [
+        ...state.active.temporalImages,
+        ...action.payload,
+      ];
 
-        state.isSaving = false;
-        return;
-      }
+      state.isSaving = false;
+    },
+
+    savePhoto: (state, action) => {
       state.active.imageUrls = [...state.active.imageUrls, ...action.payload];
       state.active.temporalImages = [];
       state.isSaving = false;
     },
-    deletePhoto: (state,action) => {
-      if (`${action.payload[0]}`.includes(`blob:http`)) {
-        state.active.temporalImages = [
-          
-          ...action.payload,
-        ];
-
-        state.isSaving = false;
-        return;
-      }
-      state.active.imageUrls = [ ...action.payload];
-      state.active.temporalImages = [];
+    deleteSavedPhoto: (state, action) => {
+      state.active.imageUrls = [...action.payload];
+      state.active.temporalImages = [...state.active.temporalImages];
       state.isSaving = false;
-      
+    },
+    deleteTemporalPhoto: (state, action) => {
+      state.active.temporalImages = [...action.payload];
+      state.active.imageUrls = [...state.active.imageUrls];
+      state.isSaving = false;
     },
     deleteNoteById: (state, action) => {
       state.active = null;
@@ -96,9 +91,11 @@ export const {
   addNewEmptyNote,
   clearNoteLogout,
   deleteNoteById,
-  deletePhoto,
+  deleteSavedPhoto,
+  deleteTemporalPhoto,
   setActiveNote,
   savingNewNote,
+  savePhoto,
   setNote,
   setSaving,
   setPhotoToActiveNote,
